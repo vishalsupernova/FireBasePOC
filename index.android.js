@@ -35,7 +35,7 @@ export default class FireBaseProject extends Component {
       dataSource: []
     }
     this.showdata = this.showdata.bind(this);
-    this.senddata = this.senddata.bind(this);
+    this.sendData = this.sendData.bind(this);
   }
 
   componentDidMount() {
@@ -59,14 +59,24 @@ export default class FireBaseProject extends Component {
     })
   }
 
-  senddata(index, value){
-   var approveRef = itemsRef.child(index).child(value)
-   approveRef.transaction( (newValue) => { return newValue ? false : true} )
-   let currentObject = this.state.dataSource[index];
-   currentObject[value] = !currentObject[value];
-   this.setState({
-    showDetails: currentObject,
-   })
+  sendData(index, value){
+    let currentObject = this.state.dataSource[index];
+    if(value === "approve"){
+      let cliam = currentObject['cliam'];
+      if(cliam == false){
+        currentObject['cliam'] = !currentObject['cliam']
+        var approveRef = itemsRef.child(index).child('cliam')
+        approveRef.transaction( (newValue) => { return newValue ? false : true} )
+      }
+    }
+    else{
+      var approveRef = itemsRef.child(index).child(value)
+      approveRef.transaction( (newValue) => { return newValue ? false : true} )
+      currentObject[value] = !currentObject[value];
+    }
+    this.setState({
+      showDetails: currentObject,
+     })
   }
 
   render() {
@@ -85,17 +95,17 @@ export default class FireBaseProject extends Component {
           {showDetails ?
           <View>
           <Button
-          style={styles.welcome}
-          onPress={() => this.senddata(dataSource.findIndex(i => i.name === showDetails.name), 'cliam')}
+          style={styles.instructions}
+          onPress={() => this.sendData(dataSource.findIndex(i => i.name === showDetails.name), 'cliam')}
           title="Claim"
           color="#841584"
           accessibilityLabel="Claim"
           disabled={!showDetails.cliam}
         />
           <Button
-          style={styles.welcome}
-          onPress={() => this.senddata(dataSource.findIndex(i => i.name === showDetails.name), 'approve')}
-          title="Approve"
+          style={styles.instructions}
+          onPress={() => this.sendData(dataSource.findIndex(i => i.name === showDetails.name), 'approve')}
+          title="Reset"
           color="#841584"
           accessibilityLabel="Approve"
           disabled={!showDetails.approve}
@@ -124,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-  },
+  }
 });
 
 AppRegistry.registerComponent('FireBaseProject', () => FireBaseProject);
