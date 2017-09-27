@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_number": "187118070183",
+    "firebase_url": "https://reteriveitems.firebaseio.com",
+    "project_id": "reteriveitems",
+    "storage_bucket": "reteriveitems.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187118070183:android:940412b1f38e3a6b",
+        "android_client_info": {
+          "package_name": "com.firebaseproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187118070183-hu7tgtcrkldu9cvoc5lokmi4ksdbj933.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy0g8ULncIZIcCy_MlSPGAYMC0leNGNLk"
+        },
+        {
+          "current_key": "AIzaSyCk5s6forZfDn2mb7KNCQrJ-bVQVeUG9Js"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
