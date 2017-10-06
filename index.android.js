@@ -12,9 +12,10 @@ import {
   View,
   ListView,
   Button,
-  TouchableHighlight, TouchableOpacity
+  TouchableHighlight,
+  ScrollView
 } from 'react-native';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase'; // 4.5.0
 
 var config = {
   apiKey: "AIzaSyCv262Xt6FwaoE0NuhQ-42THeNDKf5d7_E",
@@ -50,30 +51,29 @@ export default class FireBaseProject extends Component {
         dataSource: cars,
         showDetails: null
       })
-
     })
   }
 
-  showdata(item) {
+  showdata(index) {
     this.setState({
-      showDetails: this.state.dataSource[item]
+      showDetails: this.state.dataSource[index]
     })
   }
 
   sendData(index, value) {
     let currentObject = this.state.dataSource[index];
-    if (value === "approve") {
-      let cliam = currentObject['cliam'];
-      if (cliam == false) {
-        currentObject['cliam'] = !currentObject['cliam']
-        var approveRef = itemsRef.child(index).child('cliam')
-        approveRef.transaction((newValue) => { return newValue ? false : true })
-      }
+    if (value === "cliam") {
+      currentObject['cliam'] = !currentObject['cliam']
+      var approveRef = itemsRef.child(index).child('cliam')
+      approveRef.transaction((newValue) => { return newValue ? false : true })
+      currentObject['approve'] = !currentObject['approve']
+      var approveRef = itemsRef.child(index).child('approve')
+      approveRef.transaction((newValue) => { return newValue ? false : true })
     }
     else {
-      var approveRef = itemsRef.child(index).child(value)
+      currentObject['approve'] = !currentObject['approve']
+      var approveRef = itemsRef.child(index).child('approve')
       approveRef.transaction((newValue) => { return newValue ? false : true })
-      currentObject[value] = !currentObject[value];
     }
     this.setState({
       showDetails: currentObject,
@@ -81,39 +81,35 @@ export default class FireBaseProject extends Component {
   }
 
   render() {
-    const { dataSource, showDetails } = this.state;
-    console.log(showDetails)
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    const rowData = dataSource.length > 0 ? ds.cloneWithRows(dataSource.map(item => item.name)) : null
+    const rowData = this.state.dataSource.length > 0 ? ds.cloneWithRows(this.state.dataSource.map(item => item.name)) : null
     return (
-      <View>
+      <View style={styles.container}>
         <Text style={styles.welcome}>List View</Text>
-        <TouchableHighlight >
-          <View  >
-            {dataSource.length > 0 ?
-              dataSource.map((item, index) => <Text style={styles.instructions} key={item.index} onPress={() => this.showdata(index)}>{item.name}</Text>)
+        <TouchableHighlight style={{ flex: 4 }} underlayColor="white">
+          <View>
+            {this.state.dataSource.length > 0 ?
+              this.state.dataSource.map((item, index) => <Text style={styles.instructions} key={item.key} onPress={() => this.showdata(index)}>{item.name}</Text>)
               : null}
           </View>
         </TouchableHighlight>
-
-        <View>
-          <Text style={{fontSize: 20,textAlign: 'center',color: 'black', fontWeight: 'bold'}}>{showDetails && showDetails.name}</Text>
-          {showDetails ?
-            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
+        <View style={{ flex: 1.5 }}>
+          <Text style={{ fontSize: 20, textAlign: 'center', color: 'black', fontWeight: 'bold' }}>{this.state.showDetails && this.state.showDetails.name}</Text>
+          {this.state.showDetails ?
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
               <Button
-                styles={styles.button}
-                onPress={() => this.sendData(dataSource.findIndex(item => item.name === showDetails.name), 'cliam')}
+                onPress={() => this.sendData(this.state.dataSource.findIndex(item => item.name === this.state.showDetails.name), 'cliam')}
                 title="Claim"
                 color="#68D158"
                 accessibilityLabel="Claim"
-                disabled={!showDetails.cliam}
+                disabled={!this.state.showDetails.cliam}
               />
               <Button
-                onPress={() => this.sendData(dataSource.findIndex(item => item.name === showDetails.name), 'approve')}
-                title="Reset"
+                onPress={() => this.sendData(this.state.dataSource.findIndex(item => item.name === this.state.showDetails.name), 'approve')}
+                title="Deliver"
                 color="#FC5304"
                 accessibilityLabel="Approve"
-                disabled={!showDetails.approve}
+                disabled={!this.state.showDetails.approve}
               />
             </View>
             : null}</View>
@@ -131,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ADECEA',
     fontWeight: 'bold',
     fontFamily: 'times',
-    borderWidth: 0.5
+    borderWidth: 0.5,
   },
   instructions: {
     fontSize: 15,
@@ -141,9 +137,14 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     fontFamily: 'arial'
   },
-  b: {
-    marginTop: 10
-  }
+  container: {
+    // paddingTop: 60,
+    // alignItems: 'center',
+    flex: 1
+  },
+  // b: {
+  //   marginTop: 10
+  // }
 });
 
 AppRegistry.registerComponent('FireBaseProject', () => FireBaseProject);
