@@ -126,6 +126,8 @@ export default class FireBaseProject extends Component {
                     disabled={!this.state.showDetails.approve}
                   />
                 </View>}
+                { !this.state.showDetails.cliam && !this.state.showDetails.approve ? 
+                <View><Text>{this.state.showDetails.name + ' has been delivered by ' + this.state.showDetails.userid}</Text></View> : true }
             </View>
             : null}</View>
       </View>
