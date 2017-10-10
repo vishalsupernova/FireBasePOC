@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
   StyleSheet,
   Text,
@@ -104,13 +105,27 @@ export default class FireBaseProject extends Component {
                 accessibilityLabel="Claim"
                 disabled={!this.state.showDetails.cliam}
               />
-              <Button
-                onPress={() => this.sendData(this.state.dataSource.findIndex(item => item.name === this.state.showDetails.name), 'approve')}
-                title="Deliver"
-                color="#FC5304"
-                accessibilityLabel="Approve"
-                disabled={!this.state.showDetails.approve}
-              />
+              {!this.state.showDetails.cliam ? <TouchableHighlight
+                onPress={() => Alert.alert('Lot Details', alertMessage = this.state.showDetails.name + ' has been delivered by ' + this.state.showDetails.userid)}>
+                <View>
+                  <Button
+                    onPress={() => this.sendData(this.state.dataSource.findIndex(item => item.name === this.state.showDetails.name), 'approve')}
+                    title="Deliver"
+                    color="#FC5304"
+                    accessibilityLabel="Approve"
+                    disabled={!this.state.showDetails.approve}
+                  />
+                </View>
+              </TouchableHighlight> :
+                <View>
+                  <Button
+                    onPress={() => this.sendData(this.state.dataSource.findIndex(item => item.name === this.state.showDetails.name), 'approve')}
+                    title="Deliver"
+                    color="#FC5304"
+                    accessibilityLabel="Approve"
+                    disabled={!this.state.showDetails.approve}
+                  />
+                </View>}
             </View>
             : null}</View>
       </View>
